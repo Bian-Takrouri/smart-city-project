@@ -78,4 +78,9 @@ POST  	/api/auth/login	                         Login & create Redis session
 -Awareness of NoSQL trade‑offs
 
 👩‍💻 Authors
-Bian Takrouri , Marwa Manasra , Shaden Imriziq , Ikram Bader , Jana Abu Shama 
+Bian Takrouri , Marwa Manasra , Shaden Imriziq , Ikram Bader , Jana Abu Shama
+
+📄 License
+This project was developed as a course project (NoSQL Databases / Smart City Platform).
+For educational purposes only.
+
