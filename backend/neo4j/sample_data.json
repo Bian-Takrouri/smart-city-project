@@ -1,0 +1,23 @@
+[
+  { "citizenId": "C101", "name": "Lina" },
+  { "citizenId": "C102", "name": "Omar" },
+  { "citizenId": "C103", "name": "Sara" },
+  { "citizenId": "C104", "name": "Ali" },
+  { "citizenId": "C105", "name": "Noor" },
+
+  { "areaId": "A01", "name": "Downtown" },
+  { "areaId": "A02", "name": "City Center" },
+  { "areaId": "A03", "name": "North Area" },
+  { "areaId": "A04", "name": "West Area" },
+
+  { "departmentId": "D01", "name": "Lighting" },
+  { "departmentId": "D02", "name": "Waste Management" },
+  { "departmentId": "D03", "name": "Traffic" },
+
+  { "requestId": "R501", "issueType": "Lighting", "status": "Pending" },
+  { "requestId": "R502", "issueType": "Waste", "status": "In Progress" },
+  { "requestId": "R503", "issueType": "Traffic", "status": "Pending" },
+  { "requestId": "R504", "issueType": "Road Damage", "status": "Pending" },
+  { "requestId": "R505", "issueType": "Lighting", "status": "Resolved" },
+  { "requestId": "R506", "issueType": "Waste", "status": "Pending" }
+]

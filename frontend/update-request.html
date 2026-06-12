@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Request Status - Smart City</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+        <a class="navbar-brand" href="index.html">🏙️ Smart City</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="add-request.html">Add Request</a></li>
+                <li class="nav-item"><a class="nav-link" href="add-citizen.html">Add Citizen</a></li>
+                <li class="nav-item"><a class="nav-link" href="track-request.html">Track Request</a></li>
+                <li class="nav-item"><a class="nav-link" href="update-request.html">Update Request</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="text-center">🔄 Update Request Status (Department)</h3>
+                        <form id="updateForm">
+                            <input type="text" id="requestId" class="form-control my-2" placeholder="Request ID (e.g., R501)" required>
+                            <select id="status" class="form-control my-2" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                            <button type="submit" class="btn btn-warning w-100">Update Status</button>
+                            <div id="msg" class="mt-2 text-center"></div>
+                        </form>
+                        <div id="requestInfo" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadRequestInfo(requestId) {
+            try {
+                const res = await fetch('http://localhost:5000/api/requests');
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const request = data.data.find(r => r.requestId === requestId);
+                    if (request) {
+                        document.getElementById('requestInfo').innerHTML = `
+                            <div class="alert alert-info">
+                                <strong>Current Status:</strong> ${request.status}<br>
+                                <strong>Issue:</strong> ${request.issueType}<br>
+                                <strong>Citizen:</strong> ${request.citizenId}
+                            </div>
+                        `;
+                    } else {
+                        document.getElementById('requestInfo').innerHTML = '<div class="alert alert-danger">Request not found</div>';
+                    }
+                }
+            } catch(e) {
+                document.getElementById('requestInfo').innerHTML = '<div class="alert alert-danger">Error loading request</div>';
+            }
+        }
+
+        document.getElementById('updateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const requestId = document.getElementById('requestId').value;
+            const status = document.getElementById('status').value;
+            const msgDiv = document.getElementById('msg');
+            
+            try {
+                const res = await fetch(`http://localhost:5000/api/requests/${requestId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: status })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    msgDiv.innerHTML = '<span class="text-success">✅ Status updated successfully!</span>';
+                    loadRequestInfo(requestId);
+                    setTimeout(() => msgDiv.innerHTML = '', 3000);
+                } else {
+                    msgDiv.innerHTML = '<span class="text-danger">❌ Error: ' + data.error + '</span>';
+                }
+            } catch(err) {
+                msgDiv.innerHTML = '<span class="text-danger">❌ Network error</span>';
+            }
+        });
+
+        document.getElementById('requestId').addEventListener('blur', (e) => {
+            if (e.target.value) {
+                loadRequestInfo(e.target.value);
+            }
+        });
+    </script>
+</body>
+</html>

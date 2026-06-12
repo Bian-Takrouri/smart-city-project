@@ -1,0 +1,5 @@
+# Test Commands
+SET session:C101 active EX 3600
+GET session:C101
+TTL session:C101
+SET area_stats:A01 "Sample Data" EX 300

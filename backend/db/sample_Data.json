@@ -1,0 +1,178 @@
+{
+  "citizens": [
+    {
+      "citizenId": "C101",
+      "name": "Lina Ahmad",
+      "email": "lina@gmail.com",
+      "phone": "0591111111",
+      "district": "Downtown",
+      "preferredServices": ["Traffic", "Waste"]
+    }
+  ],
+  "requests": [[
+  {
+    "requestId": "R501",
+    "citizenId": "C101",
+    "issueType": "Lighting",
+    "description": "Broken street light near school",
+    "status": "Pending",
+    "priority": "High",
+    "departmentId": "D03",
+    "areaId": "A01",
+    "createdAt": "2026-05-14"
+  },
+  {
+    "requestId": "R502",
+    "citizenId": "C102",
+    "issueType": "Waste",
+    "description": "Garbage containers are overflowing",
+    "status": "In Progress",
+    "priority": "Medium",
+    "departmentId": "D01",
+    "areaId": "A02",
+    "createdAt": "2026-05-13"
+  },
+  {
+    "requestId": "R503",
+    "citizenId": "C103",
+    "issueType": "Traffic",
+    "description": "Heavy traffic congestion during rush hour",
+    "status": "Pending",
+    "priority": "High",
+    "departmentId": "D02",
+    "areaId": "A01",
+    "createdAt": "2026-05-12"
+  },
+  {
+    "requestId": "R504",
+    "citizenId": "C104",
+    "issueType": "Waste",
+    "description": "Waste collection delayed",
+    "status": "Resolved",
+    "priority": "Low",
+    "departmentId": "D01",
+    "areaId": "A03",
+    "createdAt": "2026-05-11"
+  },
+  {
+    "requestId": "R505",
+    "citizenId": "C105",
+    "issueType": "Lighting",
+    "description": "Street lights flickering",
+    "status": "In Progress",
+    "priority": "Medium",
+    "departmentId": "D03",
+    "areaId": "A02",
+    "createdAt": "2026-05-10"
+  },
+  {
+    "requestId": "R506",
+    "citizenId": "C106",
+    "issueType": "Traffic",
+    "description": "Signals not synchronized",
+    "status": "Pending",
+    "priority": "High",
+    "departmentId": "D02",
+    "areaId": "A01",
+    "createdAt": "2026-05-09"
+  },
+  {
+    "requestId": "R507",
+    "citizenId": "C107",
+    "issueType": "Water",
+    "description": "Water leakage near buildings",
+    "status": "Pending",
+    "priority": "High",
+    "departmentId": "D04",
+    "areaId": "A03",
+    "createdAt": "2026-05-08"
+  },
+  {
+    "requestId": "R508",
+    "citizenId": "C108",
+    "issueType": "Road Damage",
+    "description": "Large potholes on road",
+    "status": "In Progress",
+    "priority": "Medium",
+    "departmentId": "D05",
+    "areaId": "A02",
+    "createdAt": "2026-05-07"
+  },
+  {
+    "requestId": "R509",
+    "citizenId": "C109",
+    "issueType": "Lighting",
+    "description": "Broken lights in parking",
+    "status": "Resolved",
+    "priority": "Low",
+    "departmentId": "D03",
+    "areaId": "A04",
+    "createdAt": "2026-05-06"
+  },
+  {
+    "requestId": "R510",
+    "citizenId": "C110",
+    "issueType": "Water",
+    "description": "Water interruption in area",
+    "status": "Pending",
+    "priority": "High",
+    "departmentId": "D04",
+    "areaId": "A01",
+    "createdAt": "2026-05-05"
+  }
+]],
+  "departments": [[
+  {
+    "departmentId": "D01",
+    "name": "Waste Management Department",
+    "manager": "Omar Hassan",
+    "email": "waste@municipality.gov"
+  },
+  {
+    "departmentId": "D02",
+    "name": "Traffic Control Department",
+    "manager": "Sara Mahmoud",
+    "email": "traffic@municipality.gov"
+  },
+  {
+    "departmentId": "D03",
+    "name": "Electricity Department",
+    "manager": "Ahmad Ali",
+    "email": "electricity@municipality.gov"
+  },
+  {
+    "departmentId": "D04",
+    "name": "Water Services Department",
+    "manager": "Yousef Nasser",
+    "email": "water@municipality.gov"
+  },
+  {
+    "departmentId": "D05",
+    "name": "Public Works Department",
+    "manager": "Lina Khaled",
+    "email": "publicworks@municipality.gov"
+  }
+]],
+  "areas": [[
+  {
+    "areaId": "A01",
+    "name": "Downtown",
+    "population": 25000
+  },
+  {
+    "areaId": "A02",
+    "name": "City Center",
+    "population": 18000
+  },
+  {
+    "areaId": "A03",
+    "name": "North Area",
+    "population": 22000
+  },
+  {
+    "areaId": "A04",
+    "name": "West Side",
+    "population": 15000
+  }
+]]
+}

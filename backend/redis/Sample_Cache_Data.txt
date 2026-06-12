@@ -1,0 +1,3 @@
+Key: session:C101  | Value: "active" | TTL: 3590s
+Key: session:C102  | Value: "active" | TTL: 1200s
+Key: area_stats:A01 | Value: "Downtown, 250 Reports" | TTL: 240s

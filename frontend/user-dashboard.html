@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Smart City</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { background: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar-brand { font-weight: bold; font-size: 1.5rem; }
+        .card { border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .btn-primary { background-color: #1f497d; border-color: #1f497d; }
+        footer { background: #1f497d; color: white; text-align: center; padding: 15px; margin-top: 40px; }
+        .welcome-card { background: linear-gradient(135deg, #1f497d, #2c5a9e); color: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar خاصة بالمستخدم -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="user-dashboard.html">🏙️ Smart City - Citizen Portal</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto" id="navMenu">
+                    <li class="nav-item"><a class="nav-link" href="user-dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="add-request.html">Add Request</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Welcome Section -->
+        <div class="welcome-card text-center" id="welcomeSection">
+            <h2><i class="fas fa-user-circle"></i> Welcome, Citizen!</h2>
+            <p>Submit and track your service requests easily.</p>
+        </div>
+
+        <!-- User Info (if logged in) -->
+        <div class="card" id="userInfo" style="display: none;">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-user"></i> Your Information</h5>
+                <p><strong>Name:</strong> <span id="userName">-</span></p>
+                <p><strong>Citizen ID:</strong> <span id="userId">-</span></p>
+                <p><strong>Email:</strong> <span id="userEmail">-</span></p>
+                <p><strong>District:</strong> <span id="userDistrict">-</span></p>
+                <button class="btn btn-danger btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-plus-circle fa-3x text-primary mb-2"></i>
+                        <h5 class="card-title">Submit New Request</h5>
+                        <p class="card-text">Report a city issue like waste, traffic, or street lighting.</p>
+                        <a href="add-request.html" class="btn btn-primary">Add Request</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-search fa-3x text-primary mb-2"></i>
+                        <h5 class="card-title">Track Your Requests</h5>
+                        <p class="card-text">Check the status of your submitted requests.</p>
+                        <a href="track-request.html" class="btn btn-outline-primary">Track Request</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Requests Section -->
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Your Service Requests</h5>
+            </div>
+            <div class="card-body">
+                <div id="requestsList" class="row">Loading your requests...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Smart City Municipality Platform - Citizen Portal
+    </footer>
+
+    <script>
+        const API = 'http://localhost:5000/api';
+        let currentUser = null;
+
+        // Check if user is logged in
+        function checkLogin() {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('userName').innerText = currentUser.name || 'Citizen';
+                document.getElementById('userId').innerText = currentUser.citizenId;
+                document.getElementById('userEmail').innerText = currentUser.email;
+                document.getElementById('userDistrict').innerText = currentUser.district || 'Not specified';
+                loadMyRequests();
+            } else {
+                document.getElementById('welcomeSection').innerHTML = `
+                    <h2><i class="fas fa-sign-in-alt"></i> Please Login</h2>
+                    <p>You need to <a href="login.html">login</a> or <a href="register.html">register</a> to access your dashboard.</p>
+                `;
+                document.getElementById('requestsList').innerHTML = '<div class="col-12 text-muted">Please login to view your requests.</div>';
+            }
+        }
+
+        // Load only logged-in user's requests
+        async function loadMyRequests() {
+            if (!currentUser) return;
+            try {
+                const res = await fetch(`${API}/requests`);
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const myRequests = data.data.filter(r => r.citizenId === currentUser.citizenId);
+                    if (myRequests.length === 0) {
+                        document.getElementById('requestsList').innerHTML = '<div class="col-12 text-muted">You haven\'t submitted any requests yet. <a href="add-request.html">Submit one now</a>.</div>';
+                    } else {
+                        document.getElementById('requestsList').innerHTML = myRequests.map(r => `
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title">📌 ${r.requestId}</h6>
+                                        <p><strong>Issue:</strong> ${r.issueType}</p>
+                                        <p><strong>Status:</strong> <span class="badge ${r.status === 'Pending' ? 'bg-warning' : (r.status === 'Resolved' ? 'bg-success' : 'bg-info')}">${r.status}</span></p>
+                                        <p><strong>Priority:</strong> ${r.priority}</p>
+                                        <p><small>Created: ${new Date(r.createdAt).toLocaleDateString()}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch(e) {
+                document.getElementById('requestsList').innerHTML = '<div class="col-12 text-danger">Error loading requests.</div>';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('citizenId');
+            window.location.href = 'login.html';
+        }
+
+        checkLogin();
+    </script>
+</body>
+</html>

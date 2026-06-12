@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes: # موقعهم داخل ال containers (docker)
+      - ./backend/db:/docker-entrypoint-initdb.d   # ملفات التهيئة (تُنفذ تلقائياً)
+      - ./backend/db:/data/scripts # مجلد السكريبتات الإضافية
+      - mongo_data:/data/db   # تخزين البيانات بشكل دائم
+      # ملفات init-mongo.js و sample_Data.json تُنفذ تلقائياً عند أول تشغيل
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./backend/redis:/data # ربط مجلد Redis المحلي
+      - redis_data:/data  # تخزين البيانات بشكل دائم
+
+  neo4j:
+    image: neo4j
+    ports:
+      - "7474:7474" ## واجهة المتصفح (Browser)
+      - "7687:7687" #بروتوكول Bolt (للاتصال من الـ Backend)
+    environment:
+      - NEO4J_AUTH=neo4j/password123
+    volumes:
+      - ./backend/neo4j:/var/lib/neo4j/import
+      - neo4j_data:/data  # تخزين البيانات
+
+      # تخزين العلاقات بين المواطنين والطلبات والمناطق
+
+      #تحليل أكثر المناطق نشاطاً (Busiest Areas)
+
+  backend:
+    build: ./backend/api  # ببني ال image من مجلد backend/api
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+      - redis
+      - neo4j
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/smartcity
+      - REDIS_URL=redis://redis:6379
+      - NEO4J_URL=bolt://neo4j:7687
+
+      # ملاحظات سريعة على ال backend :
+      # يربط قواعد البيانات الثلاث معاً
+      #يقدم واجهة API للمستخدمين
+      #يحتوي على منطق العمليات (الإضافة، الحذف، التحديث، التحليلات)
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    # connect with backend using api
+
+volumes: # للتخزين وتبقى حتى بعد اعادة التشغيل
+  mongo_data:
+  redis_data:
+  neo4j_data:

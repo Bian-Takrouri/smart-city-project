@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Request - Smart City</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+        <a class="navbar-brand" href="index.html">🏙️ Smart City</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="add-request.html">Add Request</a></li>
+                <li class="nav-item"><a class="nav-link" href="add-citizen.html">Add Citizen</a></li>
+                <li class="nav-item"><a class="nav-link" href="track-request.html">Track Request</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="text-center">➕ Add New Service Request</h3>
+                        <form id="requestForm">
+                            <input type="text" id="requestId" class="form-control my-2" placeholder="Request ID (R501)" required>
+                            <input type="text" id="citizenId" class="form-control my-2" placeholder="Citizen ID" required>
+                            <select id="issueType" class="form-control my-2">
+                              <option>Traffic</option>
+                              <option>Waste</option>
+                              <option>Street Light</option>
+                              <option>Lighting</option>
+                              <option>Water</option>
+                              <option>Electricity</option>
+                              <option>Road Damage</option>
+                            </select>
+                            <textarea id="description" class="form-control my-2" placeholder="Description"></textarea>
+                            <select id="priority" class="form-control my-2">
+                                <option>Low</option>
+                                <option selected>Medium</option>
+                                <option>High</option>
+                            </select>
+                            <input type="text" id="areaId" class="form-control my-2" placeholder="Area ID (A01, A02, A03, A04)" required>
+                            <input type="text" id="areaName" class="form-control my-2" placeholder="Area Name (Downtown, City Center, North Area, West Side)">
+                            <button type="submit" class="btn btn-success w-100">Submit Request</button>
+                            <div id="msg" class="mt-2 text-center"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('requestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const request = {
+                requestId: document.getElementById('requestId').value,
+                citizenId: document.getElementById('citizenId').value,
+                issueType: document.getElementById('issueType').value,
+                description: document.getElementById('description').value,
+                status: 'Pending',
+                priority: document.getElementById('priority').value,
+                areaId: document.getElementById('areaId').value,
+                areaName: document.getElementById('areaName').value || 'Unknown'
+            };
+            try {
+                const res = await fetch('http://localhost:5000/api/requests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(request)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('msg').innerHTML = '<span class="text-success">✅ Request added! Redirecting...</span>';
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                } else {
+                    document.getElementById('msg').innerHTML = '<span class="text-danger">❌ Error: ' + data.error + '</span>';
+                }
+            } catch(err) {
+                document.getElementById('msg').innerHTML = '<span class="text-danger">❌ Network error</span>';
+            }
+        });
+    </script>
+</body>
+</html>
